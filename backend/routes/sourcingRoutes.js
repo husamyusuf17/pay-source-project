@@ -1,0 +1,11 @@
+const express = require("express");
+const c = require("../controllers/sourcingController");
+const { authenticate, authorize } = require("../middleware/auth");
+const router = express.Router();
+router.use(authenticate);
+router.get("/rfqs", c.listRFQs);
+router.post("/rfqs", authorize("PROCUREMENT", "ADMIN"), c.createRFQ);
+router.get("/rfqs/:id/offers", c.listOffers);
+router.post("/rfqs/:id/offers", authorize("PROCUREMENT", "ADMIN"), c.submitOffer);
+router.patch("/rfqs/:id/award/:offerId", authorize("PROCUREMENT", "ADMIN"), c.awardOffer);
+module.exports = router;
