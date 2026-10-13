@@ -1,0 +1,11 @@
+const express = require("express");
+const { create, list, getById, approve, reject } = require("../controllers/purchaseRequestController");
+const { authenticate, authorize } = require("../middleware/auth");
+const router = express.Router();
+router.use(authenticate);
+router.post("/", authorize("REQUESTER", "ADMIN"), create);
+router.get("/", list);
+router.get("/:id", getById);
+router.patch("/:id/approve", authorize("MANAGER", "FINANCE", "ADMIN"), approve);
+router.patch("/:id/reject", authorize("MANAGER", "FINANCE", "ADMIN"), reject);
+module.exports = router;
