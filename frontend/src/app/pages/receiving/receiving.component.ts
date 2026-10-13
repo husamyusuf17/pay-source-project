@@ -1,0 +1,9 @@
+import { Component, OnInit, signal } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ProcurementApiService } from '../../core/services/procurement-api.service';
+import { AuthService } from '../../core/services/auth.service';
+@Component({selector:'app-receiving',standalone:true,imports:[ReactiveFormsModule],template:`
+<h1>Goods Receiving / GRN</h1>
+@if(auth.hasRole('PROCUREMENT','ADMIN')){<section class="card"><form [formGroup]="form" (ngSubmit)="create()" class="form-grid two"><label>PO ID<input formControlName="purchaseOrderId"></label><label>Item description<input formControlName="description"></label><label>Quantity received<input type="number" formControlName="quantityReceived"></label><label>Note<input formControlName="note"></label><button>Create GRN</button></form></section>}
+<section class="card"><table><thead><tr><th>GRN</th><th>PO</th><th>Received items</th></tr></thead><tbody>@for(g of grns();track g._id){<tr><td>{{g.grnNumber}}</td><td><code>{{g.purchaseOrder?._id || g.purchaseOrder}}</code></td><td><pre>{{json(g.receivedItems)}}</pre></td></tr>}</tbody></table></section>`})
+export class ReceivingComponent implements OnInit{grns=signal<any[]>([]);form;constructor(private fb:FormBuilder,private api:ProcurementApiService,public auth:AuthService){this.form=this.fb.nonNullable.group({purchaseOrderId:['',Validators.required],description:['Laptop',Validators.required],quantityReceived:[10,[Validators.required,Validators.min(0)]],note:['']});}ngOnInit(){this.load();}load(){this.api.listGRNs().subscribe(r=>this.grns.set(r.data));}create(){const v=this.form.getRawValue();this.api.createGRN({purchaseOrderId:v.purchaseOrderId,receivedItems:[{description:v.description,quantityReceived:v.quantityReceived}],note:v.note}).subscribe(()=>this.load());}json(v:any){return JSON.stringify(v);}}
