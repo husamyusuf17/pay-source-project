@@ -10,7 +10,7 @@ A complete interview-training project that models a simplified **Source-to-Pay p
 - **JWT** — authentication
 - **Role-based authorization** — REQUESTER, MANAGER, PROCUREMENT, FINANCE, ADMIN
 
-The goal is not to copy Penny's proprietary implementation. The goal is to understand how a business requirement becomes frontend code, HTTP/API design, middleware, business logic, database models, and user-facing state.
+The goal is to understand how a business requirement becomes frontend code, HTTP/API design, middleware, business logic, database models, and user-facing state.
 
 ## Business flow implemented
 
